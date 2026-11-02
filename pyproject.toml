@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "alma-mcp"
+version = "0.1.0"
+description = "MCP servers for ALMA science: methods, settings and recipes from ~3,500 ALMA papers, plus tested analysis tools."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Adam Zacharia Anil" }]
+keywords = ["alma", "radio astronomy", "interferometry", "mcp", "model context protocol", "casa"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = [
+  "mcp>=1.10,<2",  # FastMCP API; mcp 2.x renamed it to MCPServer
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "astropy>=5.3",
+]
+
+[project.optional-dependencies]
+fit = ["emcee>=3.1"]
+uv = ["frank>=1.2"]
+cube = ["bettermoments>=1.8"]
+build = ["pandas>=2.0", "pyarrow>=14"]
+test = ["pytest>=7"]
+all = ["alma-mcp[fit,uv,cube]"]
+
+[project.scripts]
+alma-corpus-mcp = "alma_mcp.corpus.server:main"
+alma-analysis-mcp = "alma_mcp.analysis.server:main"
+
+[project.urls]
+Homepage = "https://github.com/adamzacharia/alma-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alma_mcp"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["dist-data", ".venv", "tmp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
